@@ -40,12 +40,9 @@ public class Main {
                     System.out.println("Save? (Y/N)");
                     if (br.readLine().equals("Y")) {
                         manager.savePersons(xmlFile);
-                        break;
                     }
                 }
-                else {
-                    break;
-                }
+                break;
             }
             else if (input[0].equals("add")) {
                 try {
