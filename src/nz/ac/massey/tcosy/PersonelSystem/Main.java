@@ -1,5 +1,9 @@
 package nz.ac.massey.tcosy.PersonelSystem;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,7 +19,7 @@ import java.io.InputStreamReader;
  */
 public class Main {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, IntrospectionException {
 		
 		String xmlFile = "XML.xml";
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -81,7 +85,18 @@ public class Main {
                 }
             }
             else if (input[0].equals("modify")) {
-                // TODO Implement: input[1] = attribute, input[2] = newValue  (eg. modify name Smith)
+                try {
+                    BeanInfo beanInfo = Introspector.getBeanInfo(selectedPerson != null ? selectedPerson.getClass() : null);
+                    PropertyDescriptor[] properties = beanInfo.getPropertyDescriptors();
+                    for (PropertyDescriptor property : properties) {
+                        if (property.getName().equals(input[1])) {
+                            property.getWriteMethod().invoke(selectedPerson, input[2]);
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    System.out.println("Invalid Inputs");
+                }
             }
             else {
                 System.out.println("Invalid Command\n");
