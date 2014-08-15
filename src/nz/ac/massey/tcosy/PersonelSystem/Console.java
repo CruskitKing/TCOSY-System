@@ -33,7 +33,7 @@ public class Console {
             String[] input = inputArray.split(" ");
 
             if (input[0].equals("quit")) {
-                close();
+                checkSaved();
                 break;
             }
             else if (input[0].equals("add")) {
@@ -52,27 +52,16 @@ public class Console {
                 getPerson(input[1],input[2]);
             }
             else if (input[0].equals("modify")) {
-                modify(input[1],input[2]);
+                modify(input[1], input[2]);
+            }
+            else if (input[0].equals("show")) {
+                show();
             }
             else {
                 System.out.println("Invalid Command\n");
             }
         }
 	}
-
-    public static void close() {
-        try {
-            if (!manager.getSaved()) {
-                System.out.println("Save? (Y/N)");
-                if (br.readLine().equals("Y")) {
-                    save();
-                }
-            }
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-    }
 
     public static void add(String name, String firstName, String studentID, String email, String gameID) {
         try {
@@ -96,6 +85,7 @@ public class Console {
 
     public static void load() {
         try {
+            checkSaved();
             manager.loadPersons();
         }
         catch (IOException e) {
@@ -135,6 +125,35 @@ public class Console {
                         property.getWriteMethod().invoke(manager.getSelectedPerson(), newValue);
                     }
                     manager.setSaved(false);
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void checkSaved() {
+        try {
+            if (!manager.getSaved()) {
+                System.out.println("Save? (Y/N)");
+                if (br.readLine().equals("Y")) {
+                    save();
+                }
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void show() {
+        try {
+            BeanInfo beanInfo= Introspector.getBeanInfo(manager.getSelectedPerson() != null ? manager.getSelectedPerson().getClass() : null);
+            PropertyDescriptor[] properties = beanInfo.getPropertyDescriptors();
+            for (PropertyDescriptor property : properties) {
+                if (!property.getName().equals("class")) {
+                    System.out.println(property.getName() + ":\t" + property.getReadMethod().invoke(manager.getSelectedPerson()));
                 }
             }
         }
