@@ -119,7 +119,7 @@ public class Console {
 //                System.out.println(property);
                 if (property.getName().equals(attribute)) {
                     if (property.getPropertyType().equals(Boolean.class)) {
-                        property.getWriteMethod().invoke(manager.getSelectedPerson(), newValue.equals("true") ? true : null);
+                        property.getWriteMethod().invoke(manager.getSelectedPerson(), newValue.equals("true") ? true : false);
                     }
                     else {
                         property.getWriteMethod().invoke(manager.getSelectedPerson(), newValue);
